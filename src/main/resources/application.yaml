@@ -1,0 +1,12 @@
+swagger:
+  apiInfo:
+    title: "My title"
+    description: "My description"
+    version: "1.2"
+    terms-of-service-url: "url"
+    license: "Api License"
+    license-url: "Licence Url"
+    contact:
+      name: "Contact Name"
+      url: "contacturl"
+      email: "contact@email.com"
