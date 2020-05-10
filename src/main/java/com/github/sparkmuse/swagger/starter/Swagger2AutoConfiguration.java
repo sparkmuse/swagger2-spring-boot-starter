@@ -1,28 +1,26 @@
 package com.github.sparkmuse.swagger.starter;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.AuthorizationCodeGrantBuilder;
-import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.BasicAuth;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration;
 
-import java.util.*;
-
-import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableSwagger2
@@ -30,7 +28,21 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 @EnableConfigurationProperties({SwaggerProperties.class})
 public class Swagger2AutoConfiguration {
 
-    private static String DEFAULT_GROUP = "api";
+    private static final String DEFAULT_GROUP = "api";
+
+    public static final Contact DEFAULT_CONTACT =
+            new Contact("Contact Name", "contact.url", "contact@email.com");
+
+    public static final ApiInfo DEFAULT_API_INFO = new ApiInfo(
+            "Api Documentation",
+            "Api Documentation",
+            "1.0",
+            "urn:tos",
+            DEFAULT_CONTACT,
+            "Apache 2.0",
+            "http://www.apache.org/licenses/LICENSE-2.0",
+            new ArrayList<>());
+
 
     @Bean
     @ConditionalOnMissingBean
@@ -50,7 +62,7 @@ public class Swagger2AutoConfiguration {
         SwaggerProperties.ApiInfo apiInfo = swaggerProperties.getApiInfo();
 
         if (apiInfo == null) {
-            return ApiInfo.DEFAULT;
+            return DEFAULT_API_INFO;
         }
 
         // Final object to be returned
@@ -59,25 +71,28 @@ public class Swagger2AutoConfiguration {
         // Check the contact
         SwaggerProperties.Contact contact = apiInfo.getContact();
         if (contact != null) {
-            result.setContact(new MutableContact());
-            result.getContact().setName(defaultIfNull(contact.getName(), ApiInfo.DEFAULT_CONTACT.getName()));
-            result.getContact().setEmail(defaultIfNull(contact.getEmail(), ApiInfo.DEFAULT_CONTACT.getEmail()));
-            result.getContact().setUrl(defaultIfNull(contact.getUrl(), "ApiInfo.DEFAULT_CONTACT.getUrl()"));
+            MutableContact resultContact = new MutableContact();
+            resultContact.name(contact.getName() == null ? DEFAULT_CONTACT.getName() : contact.getName());
+            resultContact.name(contact.getEmail() == null ? DEFAULT_CONTACT.getEmail() : contact.getEmail());
+            resultContact.name(contact.getUrl() == null ? DEFAULT_CONTACT.getUrl() : contact.getUrl());
+            result.contact(resultContact);
         }
 
-        return  MutableApiInfo.toApiInfo(result);
+        return MutableApiInfo.toApiInfo(result);
     }
 
     private MutableApiInfo getMutableApiInfo(SwaggerProperties.ApiInfo apiInfo) {
+
         MutableApiInfo result = new MutableApiInfo();
 
-        result.setTitle(defaultIfNull(apiInfo.getTitle(), ApiInfo.DEFAULT.getTitle()));
-        result.setDescription(defaultIfNull(apiInfo.getDescription(), ApiInfo.DEFAULT.getDescription()));
-        result.setLicense(defaultIfNull(apiInfo.getLicense(), ApiInfo.DEFAULT.getLicense()));
-        result.setLicenseUrl(defaultIfNull(apiInfo.getLicenseUrl(), ApiInfo.DEFAULT.getLicenseUrl()));
-        result.setTermsOfServiceUrl(defaultIfNull(apiInfo.getTermsOfServiceUrl(), ApiInfo.DEFAULT.getTermsOfServiceUrl()));
-        result.setVersion(defaultIfNull(apiInfo.getVersion(), ApiInfo.DEFAULT.getVersion()));
-        result.setVendorExtensions(ApiInfo.DEFAULT.getVendorExtensions());
+        result.title(apiInfo.getTitle() == null ? DEFAULT_API_INFO.getTitle() : apiInfo.getTitle());
+        result.description(apiInfo.getDescription() == null ? DEFAULT_API_INFO.getDescription() : apiInfo.getDescription());
+        result.license(apiInfo.getLicense() == null ? DEFAULT_API_INFO.getLicense() : apiInfo.getLicense());
+        result.licenseUrl(apiInfo.getLicenseUrl() == null ? DEFAULT_API_INFO.getLicenseUrl() : apiInfo.getLicenseUrl());
+        result.termsOfServiceUrl(apiInfo.getTermsOfServiceUrl() == null ? DEFAULT_API_INFO.getTermsOfServiceUrl() : apiInfo.getTermsOfServiceUrl());
+        result.version(apiInfo.getVersion() == null ? DEFAULT_API_INFO.getVersion() : apiInfo.getVersion());
+        result.vendorExtensions(DEFAULT_API_INFO.getVendorExtensions());
+
         return result;
     }
 }

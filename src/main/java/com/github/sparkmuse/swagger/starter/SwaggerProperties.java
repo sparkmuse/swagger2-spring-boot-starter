@@ -4,11 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.VendorExtension;
-
-import java.util.ArrayList;
 
 @Data
 @Configuration
@@ -29,7 +24,7 @@ public class SwaggerProperties {
         private String licenseUrl;
         private Contact contact;
     }
-    
+
     @Data
     @NoArgsConstructor
     public static class Contact {
