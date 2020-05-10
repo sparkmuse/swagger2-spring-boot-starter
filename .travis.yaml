@@ -1,7 +1,9 @@
 language: java
 sudo: false
 dist: trusty
-script: mvn clean deploy --settings .travis/settings.xml
+
+install: true
+script: mvn clean install
 
 jdk:
   - openjdk11
