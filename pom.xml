@@ -8,6 +8,28 @@
     <artifactId>swagger2-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>This project autoconfigure Swagger in a Springboot application.</description>
+    <url>https://github.com/sparkmuse/swagger2-spring-boot-starter</url>
+
+    <developers>
+        <developer>
+            <name>Alfredo Lopez</name>
+            <email>alfredo.lopez.de@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/sparkmuse/swagger2-spring-boot-starter</url>
+        <connection>https://github.com/sparkmuse/swagger2-spring-boot-starter.git</connection>
+        <developerConnection>git@github.com:sparkmuse/swagger2-spring-boot-starter.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/sparkmuse/swagger2-spring-boot-starter/issues</url>
+    </issueManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot-starter-parent.version>2.2.6.RELEASE</spring-boot-starter-parent.version>
@@ -112,5 +134,24 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>UNLICENSE</name>
+            <url>http://unlicense.org/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
 </project>
