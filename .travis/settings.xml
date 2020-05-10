@@ -1,0 +1,23 @@
+<settings>
+  <servers>
+    <server>
+      <id>ossrh</id>
+      <username>${env.NEXUS_USERNAME}</username>
+      <password>${env.NEXUS_PASSWORD}</password>
+    </server>
+  </servers>
+	
+  <profiles>
+    <profile>
+      <id>ossrh</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <gpg.executable>gpg</gpg.executable>
+        <gpg.passphrase>${env.PASSWORD}</gpg.passphrase>
+      </properties>
+    </profile>
+  </profiles>
+
+</settings>
