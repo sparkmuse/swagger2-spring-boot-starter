@@ -19,6 +19,6 @@ before_install:
 deploy:
   -
     provider: script
-    script: mvn clean deploy --settings .travis/settings.xml -DskipTests=true -B -U -Prelease,ossrh
+    script: .travis/deploy.sh
     on:
       branch: master
