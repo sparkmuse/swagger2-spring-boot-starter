@@ -7,6 +7,7 @@
     <groupId>com.github.sparkmuse</groupId>
     <artifactId>swagger2-spring-boot-starter</artifactId>
     <version>1.0.0</version>
+    <!-- versioning is handled by travis -->
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>This project autoconfigure Swagger in a Springboot application.</description>
