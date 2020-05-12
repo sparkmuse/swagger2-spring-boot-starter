@@ -7,6 +7,7 @@ Starter to autoconfigure Swagger2 for Springboot. The project focuses on getting
 
 All needed to start using the project is to add the dependency to the POM and that's it.
 
+
 ```xml
 <dependency>
     <groupId>com.github.sparkmuse</groupId>
