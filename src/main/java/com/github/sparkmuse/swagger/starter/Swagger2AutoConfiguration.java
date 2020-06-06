@@ -1,26 +1,22 @@
 package com.github.sparkmuse.swagger.starter;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.BasicAuth;
 import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.SecurityConfiguration;
-import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 
 @Configuration
 @EnableSwagger2
@@ -51,10 +47,19 @@ public class Swagger2AutoConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName(swaggerProperties.getGroup() == null ? DEFAULT_GROUP : swaggerProperties.getGroup())
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                .paths(getPaths(swaggerProperties))
                 .build()
                 .apiInfo(apiInfo(swaggerProperties));
+    }
+
+    private Predicate<String> getPaths(SwaggerProperties swaggerProperties) {
+
+        if (swaggerProperties.getPathAntExpressions() == null) {
+            return PathSelectors.any();
+        }
+        return Arrays.stream(swaggerProperties.getPathAntExpressions().split(","))
+                    .map(PathSelectors::ant)
+                    .reduce(e -> false, Predicates::or);
     }
 
     private ApiInfo apiInfo(SwaggerProperties swaggerProperties) {

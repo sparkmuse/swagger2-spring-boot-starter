@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerProperties {
 
     private String group;
+    private String pathAntExpressions;
     private ApiInfo apiInfo;
 
     @Data
