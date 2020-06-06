@@ -1,10 +1,9 @@
-package com.github.sparkmuse.swagger.starter;
+package com.github.sparkmuse.swagger.starter.properties.mutable;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
 import springfox.documentation.service.VendorExtension;
 
 import java.util.ArrayList;

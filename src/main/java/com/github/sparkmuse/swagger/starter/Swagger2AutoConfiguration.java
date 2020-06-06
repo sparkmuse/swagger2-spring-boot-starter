@@ -1,5 +1,12 @@
 package com.github.sparkmuse.swagger.starter;
 
+import com.github.sparkmuse.swagger.starter.properties.SwaggerProperties;
+import com.github.sparkmuse.swagger.starter.properties.security.Oauth;
+import com.github.sparkmuse.swagger.starter.properties.security.TokenEndPoint;
+import com.github.sparkmuse.swagger.starter.properties.security.TokenRequestEndPoint;
+import com.github.sparkmuse.swagger.starter.properties.mutable.MutableApiInfo;
+import com.github.sparkmuse.swagger.starter.properties.mutable.MutableContact;
+import com.github.sparkmuse.swagger.starter.properties.security.Security;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -7,16 +14,31 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
+import springfox.documentation.builders.AuthorizationCodeGrantBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.TokenEndpointBuilder;
+import springfox.documentation.builders.TokenRequestEndpointBuilder;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.BasicAuth;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.GrantType;
+import springfox.documentation.service.OAuth;
+import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.TokenEndpoint;
+import springfox.documentation.service.TokenRequestEndpoint;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableSwagger2
@@ -49,7 +71,71 @@ public class Swagger2AutoConfiguration {
                 .select()
                 .paths(getPaths(swaggerProperties))
                 .build()
+                .securitySchemes(securitySchemes(swaggerProperties))
+//                .securityContexts(Arrays.asList(securityContext(swaggerProperties)))
                 .apiInfo(apiInfo(swaggerProperties));
+    }
+
+
+    private List<SecurityScheme> securitySchemes(SwaggerProperties swaggerProperties) {
+
+        if (swaggerProperties == null || swaggerProperties.getSecurity() == null) {
+            return Collections.emptyList();
+        }
+
+        Security security = swaggerProperties.getSecurity();
+
+        if (security.getBasic() != null && security.getBasic()) {
+            return List.of(new BasicAuth("basic"));
+        }
+
+        if (security.getApi() != null) {
+            Assert.notNull(security.getApi().getKeyName(), "Api key name cannot be null");
+            Assert.notNull(security.getApi().getVehicle(), "Api key vehicle cannot be null");
+            return List.of(new ApiKey("api",
+                    security.getApi().getKeyName(),
+                    security.getApi().getVehicle().getValue()));
+        }
+
+        Oauth oauth = security.getOauth();
+        if (oauth != null) {
+            List.of(new OAuth("oauth", scopes(oauth.getScopes()), grantTypes(oauth)));
+        }
+
+        return Collections.emptyList();
+
+    }
+
+    private List<GrantType> grantTypes(Oauth oauth) {
+
+        TokenRequestEndPoint tokenRequest = oauth.getTokenRequest();
+        Assert.notNull(tokenRequest, "Token request endpoint cannot be null");
+
+        TokenRequestEndpoint tokenRequestEndPoint = new TokenRequestEndpointBuilder()
+                .url(tokenRequest.getUrl())
+                .clientIdName(tokenRequest.getClientIdName())
+                .clientSecretName(tokenRequest.getClientSecretName())
+                .build();
+
+        TokenEndPoint token = oauth.getToken();
+        Assert.notNull(token, "Token endpoint cannot be null");
+
+        TokenEndpoint tokenEndPoint = new TokenEndpointBuilder()
+                .url(token.getUrl())
+                .tokenName(token.getTokenName())
+                .build();
+
+        GrantType grantType = new AuthorizationCodeGrantBuilder()
+                .tokenRequestEndpoint(tokenRequestEndPoint)
+                .tokenEndpoint(tokenEndPoint)
+                .build();
+        return List.of(grantType);
+    }
+
+    private static List<AuthorizationScope> scopes(List<String> scopes) {
+        return scopes.stream()
+                .map(scope -> new AuthorizationScope(scope, scope + " description"))
+                .collect(Collectors.toList());
     }
 
     private Predicate<String> getPaths(SwaggerProperties swaggerProperties) {
@@ -57,14 +143,14 @@ public class Swagger2AutoConfiguration {
         if (swaggerProperties.getPathAntExpressions() == null) {
             return PathSelectors.any();
         }
-        return Arrays.stream(swaggerProperties.getPathAntExpressions().split(","))
-                    .map(PathSelectors::ant)
-                    .reduce(e -> false, Predicates::or);
+        return Stream.of(swaggerProperties.getPathAntExpressions().split(","))
+                .map(PathSelectors::ant)
+                .reduce(e -> false, Predicates::or);
     }
 
     private ApiInfo apiInfo(SwaggerProperties swaggerProperties) {
 
-        SwaggerProperties.ApiInfo apiInfo = swaggerProperties.getApiInfo();
+        com.github.sparkmuse.swagger.starter.properties.ApiInfo apiInfo = swaggerProperties.getApiInfo();
 
         if (apiInfo == null) {
             return DEFAULT_API_INFO;
@@ -74,7 +160,7 @@ public class Swagger2AutoConfiguration {
         MutableApiInfo result = getMutableApiInfo(apiInfo);
 
         // Check the contact
-        SwaggerProperties.Contact contact = apiInfo.getContact();
+        com.github.sparkmuse.swagger.starter.properties.Contact contact = apiInfo.getContact();
         if (contact != null) {
             MutableContact resultContact = new MutableContact();
             resultContact.name(contact.getName() == null ? DEFAULT_CONTACT.getName() : contact.getName());
@@ -86,7 +172,7 @@ public class Swagger2AutoConfiguration {
         return MutableApiInfo.toApiInfo(result);
     }
 
-    private MutableApiInfo getMutableApiInfo(SwaggerProperties.ApiInfo apiInfo) {
+    private MutableApiInfo getMutableApiInfo(com.github.sparkmuse.swagger.starter.properties.ApiInfo apiInfo) {
 
         MutableApiInfo result = new MutableApiInfo();
 

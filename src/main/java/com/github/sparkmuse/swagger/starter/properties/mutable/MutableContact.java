@@ -1,8 +1,7 @@
-package com.github.sparkmuse.swagger.starter;
+package com.github.sparkmuse.swagger.starter.properties.mutable;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 import lombok.experimental.Accessors;
 import springfox.documentation.service.Contact;
 
