@@ -9,10 +9,6 @@ cache:
   directories:
     - "$HOME/.m2"
 
-script:
-  - sonar-scanner
-
-
 install:
   - mvn --settings .travis/settings.xml install sonar:sonar -B -V -Pcoverage
 
