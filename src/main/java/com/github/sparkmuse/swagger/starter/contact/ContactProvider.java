@@ -6,7 +6,7 @@ import springfox.documentation.service.Contact;
 @Component
 public class ContactProvider {
 
-    private final static Contact DEFAULT_CONTACT =
+    private static final Contact DEFAULT_CONTACT =
             new Contact("Contact name", "contact.url", "contact@email.com");
 
     public Contact get(ContactProperties contactProperties) {

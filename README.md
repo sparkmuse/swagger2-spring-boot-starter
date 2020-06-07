@@ -1,5 +1,8 @@
 
-# Swagger2 Springboot Starter [![Build Status](https://travis-ci.org/sparkmuse/swagger2-spring-boot-starter.svg?branch=master)](https://travis-ci.org/sparkmuse/swagger2-spring-boot-starter)
+# Swagger2 Springboot Starter 
+[![Build Status](https://travis-ci.org/sparkmuse/swagger2-spring-boot-starter.svg?branch=master)](https://travis-ci.org/sparkmuse/swagger2-spring-boot-starter)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swagger2&metric=alert_status)](https://sonarcloud.io/dashboard?id=swagger2)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=swagger2&metric=coverage)](https://sonarcloud.io/dashboard?id=swagger2)
 
 Starter to autoconfigure Swagger2 for Springboot. The project focuses on getting the user to use Swagger as soon as possible with the least amount of configuration. 
 

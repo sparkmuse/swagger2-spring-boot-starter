@@ -10,7 +10,7 @@ import java.util.Optional;
 @Component
 public class BasicSecurityProvider implements SecurityProvider {
 
-    private final static String NAME = "Basic";
+    private static final String NAME = "Basic";
 
     @Override
     public Optional<SecurityScheme> getScheme(Security security) {
@@ -19,7 +19,7 @@ public class BasicSecurityProvider implements SecurityProvider {
             return Optional.empty();
         }
 
-        return security.getBasic() ? Optional.of(new BasicAuth(NAME)) : Optional.empty();
+        return Boolean.TRUE.equals(security.getBasic()) ? Optional.of(new BasicAuth(NAME)) : Optional.empty();
 
     }
 }
