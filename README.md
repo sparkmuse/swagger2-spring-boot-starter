@@ -36,7 +36,7 @@ swagger:
       url: contact-url.com
       email: contact@email.com
 ```
-**Note:** Notice there is no space between the ant expressions in the paths
+**Note:** Notice there is no space between the ant expressions in the ant paths
 
 The auto-configuration processor will enhance the existing configuration with the new ones added. You need to override only what's needed.
 So if the only change needed is the name of the contact then the configuration bellow will suffice.
@@ -46,4 +46,41 @@ swagger:
   api-info:
     contact:
       name: Awesome new name
+```
+
+## Security
+
+Security can be easily configured. We support three types out of the box: basic, api, oauth
+
+### Basic
+```yaml
+swagger:
+  security:
+    basic: true
+```
+
+### Api
+```yaml
+swagger:
+  security:
+    api:
+      key-name: key
+      vehicle: header
+```
+
+### OAuth
+```yaml
+swagger:
+  security:
+    oauth:
+      scopes:
+        - read
+        - write
+      token-request:
+        client-secret-name: secret
+        client-id-name: id
+        url: /authorize
+      token:
+        url: /token
+        token-name: token
 ```

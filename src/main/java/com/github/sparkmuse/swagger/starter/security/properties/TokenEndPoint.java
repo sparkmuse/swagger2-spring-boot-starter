@@ -1,4 +1,4 @@
-package com.github.sparkmuse.swagger.starter.properties.security;
+package com.github.sparkmuse.swagger.starter.security.properties;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
