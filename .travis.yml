@@ -10,7 +10,7 @@ cache:
     - "$HOME/.m2"
 
 install:
-  - mvn --settings .travis/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+  - mvn --settings .travis/settings.xml install sonar:sonar -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -Pcoverage
 
 before_install:
     - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXEC --import; fi
@@ -22,6 +22,12 @@ deploy:
     script: .travis/deploy.sh
     on:
       branch: master
+
+addons:
+  sonarcloud:
+    organization: sparkmuse-github
+    token:
+      secure: "Tpo4SBxP5IBeZf3PA9sluTR2ocpfmxOhfLtqKdJ1FogpTmtynzfrNJrlRZBZtBCZzvWy5DZpsBd9q4PHIRe4tPSAjDn0YJfbyBBO50CI9OeYvGTxKFgWF8MrL4gVvlcoARKNFTSqgZrzGZMXH7qSvKwN+QiF8lMTRPlfrXCM2ifSypfaZNZHQj2Twk9I/DQKng7kBKL4GKMbtm1dGFhMQTZnoSm3KzJ0EEgf3RmMaBF1lnFXH5s9mgOz4ZzYaq3MtZZJ4Vy0ieaHoFHj/zqFk4XMCwb8lkA6Jqfdl+CTNCS11iyZcYVvtzVuKeWfqanCIyTBCxyIThlYUqDQsnpteaH1Pro4VWQkL6ZfNniFv2+L7FZKN8QKWO6FZoZ1/XA7fKxn2rAKTqGX4urVlYsD3xKkASQQ5Lj75F3c3pFEve/OGen+NbQSFGtBL4COhBOhlldTI/RBfUMUIXgbEE/3TzLIQ3n0j83UriQMYrsxc5gWovqSbLuBhPZtS0annwWu8Ca9tRmL3+4iuEcDoX6W/2c1Hqk9GCxz5DknAcegTnYbrz3DObXnNwHiR/bzF8tdmx0sTYTkwThXA8QXhU/urPvVyzbHBJ9XBOSPPiQvZdbGvoygZOO0Fj1kC9PsimbvdPPx5LFHEcNymyX2s9WtsaFRln7M41NDSFZ3w+2esjQ="
 
 env:
     global:
