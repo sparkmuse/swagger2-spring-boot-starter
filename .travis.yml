@@ -12,6 +12,7 @@ cache:
 script:
   - sonar-scanner
 
+
 install:
   - mvn --settings .travis/settings.xml install sonar:sonar -B -V -Pcoverage
 
