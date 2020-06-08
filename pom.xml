@@ -37,11 +37,6 @@
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <lombok.version>1.18.12</lombok.version>
         <java.version>11</java.version>
-
-        <sonar.exclusions>
-            **/*Properties.java,
-            **/security/properties/*.java
-        </sonar.exclusions>
     </properties>
 
     <dependencies>
@@ -189,6 +184,19 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>sonar</id>
+            <properties>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>sparkmuse-github</sonar.organization>
+                <sonar.exclusions>
+                    **/*Properties.java,
+                    **/security/properties/*.java
+                </sonar.exclusions>
+                <sonar.projectKey>swagger2</sonar.projectKey>
+                <sonar.java.source>11</sonar.java.source>
+            </properties>
         </profile>
     </profiles>
     <build>

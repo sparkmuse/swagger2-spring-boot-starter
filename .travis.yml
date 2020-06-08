@@ -10,7 +10,7 @@ cache:
     - "$HOME/.m2"
 
 install:
-  - mvn --settings .travis/settings.xml install sonar:sonar -B -V -Pcoverage
+  - mvn --settings .travis/settings.xml install sonar:sonar -B -V -Pcoverage,sonar
 
 before_install:
     - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXEC --import; fi

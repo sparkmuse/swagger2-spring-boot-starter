@@ -57,7 +57,7 @@ public class Swagger2AutoConfiguration {
 
     private List<SecurityScheme> securitySchemes(SwaggerProperties swaggerProperties) {
 
-        if (swaggerProperties == null || swaggerProperties.getSecurity() == null) {
+        if (swaggerProperties.getSecurity() == null) {
             return Collections.emptyList();
         }
 

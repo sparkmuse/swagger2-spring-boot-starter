@@ -111,3 +111,5 @@ fabric.properties
 hs_err_pid*
 .idea/
 *.iml
+
+sonar-project.properties
