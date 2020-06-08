@@ -12,7 +12,7 @@ import java.util.Optional;
 @Component
 public class ApiSecurityProvider implements SecurityProvider {
 
-    private final static String NAME = "Api";
+    private static final String NAME = "Api";
 
     @Override
     public Optional<SecurityScheme> getScheme(Security security) {
