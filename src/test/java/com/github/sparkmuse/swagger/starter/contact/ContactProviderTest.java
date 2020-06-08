@@ -9,6 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ContactProviderTest {
 
+    private static final Contact DEFAULT_CONTACT =
+            new Contact("Contact name", "contact.url", "contact@email.com");
+
     private ContactProvider contactProvider;
 
     @BeforeEach
@@ -20,8 +23,6 @@ class ContactProviderTest {
     @DisplayName("gets defaults when everything is null")
     void allDefaults() {
 
-        Contact expected = new Contact("Contact name", "contact.url", "contact@email.com");
-
         ContactProperties contactProperties = new ContactProperties();
 
         Contact actual = contactProvider.get(contactProperties);
@@ -29,31 +30,31 @@ class ContactProviderTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .usingDefaultComparator()
-                .isEqualTo(expected);
+                .isEqualTo(DEFAULT_CONTACT);
     }
 
     @Test
     @DisplayName("gets defaults when null")
     void allDefaultsWhenNull() {
 
-        Contact expected = new Contact("Contact name", "contact.url", "contact@email.com");
-
         Contact actual = contactProvider.get(null);
 
         assertThat(actual)
                 .usingRecursiveComparison()
                 .usingDefaultComparator()
-                .isEqualTo(expected);
+                .isEqualTo(DEFAULT_CONTACT);
     }
 
     @Test
     @DisplayName("gets defaults replacing nulls with defaults")
     void someDefaults() {
 
-        Contact expected = new Contact("New name", "contact.url", "contact@email.com");
+        Contact expected = new Contact("New name", "url", "email");
 
         ContactProperties contactProperties = new ContactProperties();
         contactProperties.setName("New name");
+        contactProperties.setUrl("url");
+        contactProperties.setEmail("email");
 
         Contact actual = contactProvider.get(contactProperties);
 

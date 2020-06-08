@@ -44,6 +44,15 @@ class Swagger2AutoConfigurationTest {
             "Apache 2.0",
             "http://www.apache.org/licenses/LICENSE-2.0",
             new ArrayList<>());
+
+    private static final Docket DEFAULT_DOCKET = new Docket(DocumentationType.SWAGGER_2)
+            .groupName("api")
+            .select()
+            .paths(PathSelectors.any())
+            .build()
+            .securitySchemes(Collections.emptyList())
+            .apiInfo(API_INFO);
+
     @Mock
     private ApiInfoProvider apiInfoProvider;
 
@@ -59,21 +68,13 @@ class Swagger2AutoConfigurationTest {
     void setUp() {
         List<SecurityProvider> securityProviders = List.of(basicSecurityProvider, apiSecurityProvider);
         configuration = new Swagger2AutoConfiguration(securityProviders, apiInfoProvider);
+
+        when(apiInfoProvider.get(any())).thenReturn(API_INFO);
     }
 
     @Test
     @DisplayName("configures docket")
     void defaults() {
-
-        Docket expected = new Docket(DocumentationType.SWAGGER_2)
-                .groupName("api")
-                .select()
-                .paths(PathSelectors.any())
-                .build()
-                .securitySchemes(Collections.emptyList())
-                .apiInfo(API_INFO);
-
-        when(apiInfoProvider.get(any())).thenReturn(API_INFO);
 
         Docket actual = configuration.docket(new SwaggerProperties());
 
@@ -81,7 +82,45 @@ class Swagger2AutoConfigurationTest {
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
                 .ignoringFields("apiSelector")
+                .isEqualTo(DEFAULT_DOCKET);
+    }
+
+    @Test
+    @DisplayName("configures docket with group")
+    void defaultsGroup() {
+
+        Docket expected = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("new group")
+                .select()
+                .paths(PathSelectors.any())
+                .build()
+                .securitySchemes(Collections.emptyList())
+                .apiInfo(API_INFO);
+
+        SwaggerProperties swaggerProperties = new SwaggerProperties();
+        swaggerProperties.setGroup("new group");
+        Docket actual = configuration.docket(swaggerProperties);
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .ignoringFields("apiSelector")
                 .isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("configures docket with no security")
+    void defaultsNoSecurity() {
+
+        SwaggerProperties swaggerProperties = new SwaggerProperties();
+        swaggerProperties.setSecurity(null);
+        Docket actual = configuration.docket(swaggerProperties);
+
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .ignoringFields("apiSelector")
+                .isEqualTo(DEFAULT_DOCKET);
     }
 
     @Test
@@ -95,8 +134,6 @@ class Swagger2AutoConfigurationTest {
                 .build()
                 .securitySchemes(Collections.emptyList())
                 .apiInfo(API_INFO);
-
-        when(apiInfoProvider.get(any())).thenReturn(API_INFO);
 
         SwaggerProperties swaggerProperties = mock(SwaggerProperties.class);
         when(swaggerProperties.getPathAntExpressions()).thenReturn("/api/**");
@@ -124,7 +161,6 @@ class Swagger2AutoConfigurationTest {
                 .securitySchemes(List.of(basicScheme, apiScheme))
                 .apiInfo(API_INFO);
 
-        when(apiInfoProvider.get(any())).thenReturn(API_INFO);
         when(basicSecurityProvider.getScheme(any())).thenReturn(Optional.of(basicScheme));
         when(apiSecurityProvider.getScheme(any())).thenReturn((Optional.of(apiScheme)));
 

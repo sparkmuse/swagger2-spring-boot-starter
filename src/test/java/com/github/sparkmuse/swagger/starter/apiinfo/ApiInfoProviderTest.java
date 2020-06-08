@@ -1,5 +1,6 @@
 package com.github.sparkmuse.swagger.starter.apiinfo;
 
+import com.github.sparkmuse.swagger.starter.contact.ContactProperties;
 import com.github.sparkmuse.swagger.starter.contact.ContactProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ApiInfoProviderTest {
 
+    private static final Contact DEFAULT_CONTACT = new Contact("Contact name", "contact.url", "contact@email.com");
+    private static final ApiInfo DEFAULT_API_INFO = new ApiInfo(
+            "Api Documentation",
+            "Api Documentation",
+            "1.0",
+            "urn:tos",
+            DEFAULT_CONTACT,
+            "Apache 2.0",
+            "http://www.apache.org/licenses/LICENSE-2.0",
+            new ArrayList<>());
     private ApiInfoProvider apiInfoProvider;
 
     @Mock
@@ -33,69 +44,52 @@ class ApiInfoProviderTest {
     @DisplayName("gets defaults when everything is null")
     void allDefaults() {
 
-        Contact contact = new Contact("Contact name", "contact.url", "contact@email.com");
-        ApiInfo expected = new ApiInfo(
-                "Api Documentation",
-                "Api Documentation",
-                "1.0",
-                "urn:tos",
-                contact,
-                "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0",
-                new ArrayList<>());
-
         ApiInfoProperties apiInfoProperties = new ApiInfoProperties();
 
-        when(contactProvider.get(any())).thenReturn(contact);
+        when(contactProvider.get(any())).thenReturn(DEFAULT_CONTACT);
 
         ApiInfo actual = apiInfoProvider.get(apiInfoProperties);
 
         assertThat(actual)
                 .usingRecursiveComparison()
                 .usingDefaultComparator()
-                .isEqualTo(expected);
+                .isEqualTo(DEFAULT_API_INFO);
     }
 
     @Test
     @DisplayName("gets defaults when null")
     void allDefaultsWhenNull() {
 
-        Contact contact = new Contact("Contact name", "contact.url", "contact@email.com");
-        ApiInfo expected = new ApiInfo(
-                "Api Documentation",
-                "Api Documentation",
-                "1.0",
-                "urn:tos",
-                contact,
-                "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0",
-                new ArrayList<>());
-
         ApiInfo actual = apiInfoProvider.get(null);
 
         assertThat(actual)
                 .usingRecursiveComparison()
                 .usingDefaultComparator()
-                .isEqualTo(expected);
+                .isEqualTo(DEFAULT_API_INFO);
     }
 
     @Test
     @DisplayName("gets defaults replacing nulls with defaults")
     void someDefaults() {
 
-        Contact contact = new Contact("Contact name", "contact.url", "contact@email.com");
+        Contact contact = DEFAULT_CONTACT;
         ApiInfo expected = new ApiInfo(
                 "New title",
-                "Api Documentation",
-                "1.0",
-                "urn:tos",
+                "New description",
+                "New version",
+                "url",
                 contact,
-                "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0",
+                "licence",
+                "url",
                 new ArrayList<>());
 
         ApiInfoProperties apiInfoProperties = new ApiInfoProperties();
         apiInfoProperties.setTitle("New title");
+        apiInfoProperties.setDescription("New description");
+        apiInfoProperties.setVersion("New version");
+        apiInfoProperties.setTermsOfServiceUrl("url");
+        apiInfoProperties.setLicense("licence");
+        apiInfoProperties.setLicenseUrl("url");
 
         when(contactProvider.get(any())).thenReturn(contact);
 
