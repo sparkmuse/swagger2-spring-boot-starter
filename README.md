@@ -4,6 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swagger2&metric=alert_status)](https://sonarcloud.io/dashboard?id=swagger2)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=swagger2&metric=coverage)](https://sonarcloud.io/dashboard?id=swagger2)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.sparkmuse/swagger2-spring-boot-starter.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.sparkmuse/swagger2-spring-boot-starter)
+
 Starter to autoconfigure Swagger2 for Springboot. The project focuses on getting the user to use Swagger as soon as possible with the least amount of configuration. 
 
 ## Usage
